@@ -2,7 +2,6 @@ const express = require('express');
 const app = express();
 const dotenv = require('dotenv');
 const config = require('./configs/index');
-// const multer = require('multer');
 const cors = require('cors');
 const apiRoutes = require('./routes/api.routes');
 

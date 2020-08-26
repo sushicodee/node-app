@@ -3,7 +3,7 @@ const ProductModel = require("./../models/product.model");
 const mapProductsHelper = (product, data) => {
   for (key in data) {
     switch (key) {
-      case "2": {
+      case "discountedItem": {
         product.discount = {};
         if (data[key] === "true" ? true : false) {
           product.discount[key] = data[key];
@@ -44,7 +44,6 @@ const mapProductsHelper = (product, data) => {
         break;
       case "discount":
         break;
-
       case "unitOfMeasurement": {
         product.size[key] = data[key];
         break;
