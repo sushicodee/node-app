@@ -48,7 +48,8 @@ router
 
   .get((req, res, next) => {
     //find single user
-    UserModel.findById(req.params.id, (err, user) => {
+    UserModel.findById(req.params.id,{password:0})
+    .exec((err, user) => {
       if (err) {
         return next(err);
       }
@@ -56,9 +57,6 @@ router
     });
   })
   .delete(authorize,(req, res, next) => {
-    if(!checkAdmin(req.loggedInUser)){
-      return next({message:'permission denied'})
-    }
     UserModel.findOne({ _id: req.params.id }).exec((err, user) => {
       if (err) {
         return next(err);

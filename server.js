@@ -4,9 +4,7 @@ const dotenv = require('dotenv');
 const config = require('./configs/index');
 // const multer = require('multer');
 const cors = require('cors');
-const authRoutes = require('./routes/auth/auth.route');
-const userRoutes = require('./routes/user/user.route');
-const commentRoutes = require('./routes/comments/comments.route');
+const apiRoutes = require('./routes/api.routes');
 
 const path = require('path');
 const { PORT } = config;
@@ -28,9 +26,8 @@ app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 
 //path routes
-app.use('/auth',authRoutes);
-app.use('/user',aunthenticate, userRoutes);
-app.use('/comment',aunthenticate,commentRoutes);
+app.use('/api',apiRoutes)
+
 //setup .env
 dotenv.config({
     path:'./.env'

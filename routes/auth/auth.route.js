@@ -12,11 +12,9 @@ const createToken = (data) => {
 
 router.post("/register", (req, res, next) => {
   const data = req.body;
-  console.log({data})
   const newUser = new UserModel({});
 
   userMapHelper(newUser, data);
-  console.log(newUser,'over here');
   newUser
     .save()
     .then((data) => {
