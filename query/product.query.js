@@ -3,27 +3,39 @@ const ProductModel = require("./../models/product.model");
 const mapProductsHelper = (product, data) => {
   for (key in data) {
     switch (key) {
-      case "discountedItem": {
+      case "2": {
         product.discount = {};
         if (data[key] === "true" ? true : false) {
           product.discount[key] = data[key];
-          if ((data.discountType !== "none" && data.discountType !== undefined && data.discount !== undefined)) {
+          if (
+            data.discountType !== "none" &&
+            data.discountType !== undefined &&
+            data.discount !== undefined
+          ) {
             product.discount.discountType = data.discountType;
             product.discount.discount = data.discount;
           } else {
             product.discount.discountType = "none";
-            product.discount.discount = ''
+            product.discount.discount = 0;
           }
-          if ((data.offers !== "none" && data.offers !== undefined && data.offerDiscount !== undefined)) {
+          if (
+            data.offers !== "none" &&
+            data.offers !== undefined &&
+            data.offerDiscount !== undefined
+          ) {
             product.discount.offers = data.offers;
             product.discount.offerDiscount = data.offerDiscount;
           } else {
             product.discount.offers = "none";
-            product.discount.offerDiscount = ''
+            product.discount.offerDiscount = 0;
           }
           break;
+        }
       }
-    }
+      case "ratingMessage":
+        break;
+      case "ratingPoint":
+        break;
       case "offerDiscount":
         break;
       case "discountType":
@@ -45,6 +57,31 @@ const mapProductsHelper = (product, data) => {
         product[key] = data[key];
     }
   }
+  //for rating
+  if(data.productRating || data.ratingPoint){
+    product.ratings = product.ratings || [];
+          if (data.ratingPoint && data.ratingMessage) {
+            const rating = {
+              message: data.ratingMessage,
+              value: data.ratingPoint,
+              user: data.user,
+            };
+            product.ratings.unshift(rating);
+          } else if(!data.ratingPoint) {
+            const rating = {
+              message: data.ratingMessage,
+              user: data.user,
+            };
+            product.ratings.unshift(rating);
+          }
+          else{
+            const rating = {
+              value: data.ratingPoint,
+              user: data.user,
+            };
+            product.ratings.unshift(rating);
+          }
+  }
 };
 
 const insert = (data) => {
@@ -53,8 +90,17 @@ const insert = (data) => {
   return newProduct.save();
 };
 
-const find = (condition) => {
-  return ProductModel.find(condition).populate("vendor").exec();
+const find = (condition , options = {}) => {
+  
+  let perPage = (parseInt(options.perPage)) || 100;
+  let currentPage = (parseInt(options.currentPage) || 1) - 1;
+  let skipCount = perPage * currentPage;
+
+  return ProductModel.find(condition)
+  .populate("vendor")
+  .limit(perPage)
+  .skip(skipCount)
+  .exec();
 };
 
 const update = (id, data) => {
@@ -99,4 +145,5 @@ module.exports = {
   find,
   update,
   remove,
+  mapProductsHelper,
 };

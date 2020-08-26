@@ -44,7 +44,7 @@ const productSchema = new Schema({
     discount:{
         discountedItem:{
             type:Boolean,
-            default:true,
+            default:false,
         },
         discountType:{
             type:String,
@@ -56,8 +56,8 @@ const productSchema = new Schema({
             enum:['sale','festival','code','none'],
             default:'none'
         },
-        discount:String,
-        offerDiscount:String,
+        discount:Number,
+        offerDiscount:Number,
     },
 
     vendor:{

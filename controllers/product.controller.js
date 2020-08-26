@@ -5,7 +5,6 @@ const find = (req,res,next) => {
     if(req.loggedInUser.role !== 1){
         condition.vendor = req.loggedInUser._id
     }
-    console.log(req,'here');
     productQuery.find(condition)
     .then(data => {
         res.status(200).send(data)
@@ -38,10 +37,10 @@ const findById = (req,res,next) => {
 } 
 
 const search = (req,res,next) => {
-    query = req.query.sku? {sku:req.query.sku} : {sku:req.body.sku}
-    let condition = {query};
-    productQuery.find(condition)
-    .populate('vendor')
+
+    let condition = {};
+    query = productQuery.mapProductsHelper(condition,req.body)
+    productQuery.find(condition,req.query)
     .then(data => {
         res.status(200).send(data)
     })
@@ -55,8 +54,10 @@ const deleteProduct = (req,res,next) => {
 }
 
 const update = (req,res,next) => {
-    //File upload todo
-    productQuery.update(req.params.id,req.body)
+    //File upload TODO
+    const data = req.body;
+    data.user = req.loggedInUser._id;
+    productQuery.update(req.params.id,data)
     .then(data => {
         res.status(200).send(data)
     })
