@@ -5,22 +5,21 @@ const mapProductsHelper = (product, data) => {
     switch (key) {
       case "discountedItem": {
         product.discount = {};
-        if (data[key] === "true") {
+        if (data[key] === "true" ? true : false) {
           product.discount[key] = data[key];
-          if ((data.discountType !== "none" && !data.discount)) {
+          if ((data.discountType !== "none" && data.discountType !== undefined && data.discount !== undefined)) {
             product.discount.discountType = data.discountType;
             product.discount.discount = data.discount;
           } else {
             product.discount.discountType = "none";
             product.discount.discount = ''
           }
-          if ((data.offers !== "none" && !data.offerDiscount)) {
+          if ((data.offers !== "none" && data.offers !== undefined && data.offerDiscount !== undefined)) {
             product.discount.offers = data.offers;
             product.discount.offerDiscount = data.offerDiscount;
           } else {
             product.discount.offers = "none";
             product.discount.offerDiscount = ''
-
           }
           break;
       }
