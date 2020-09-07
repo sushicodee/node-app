@@ -3,6 +3,7 @@ const ProductModel = require("./../models/product.model");
 const mapProductsHelper = (product, data) => {
   for (key in data) {
     switch (key) {
+        
       case "discountedItem": {
         product.discount = {};
         if (data[key] === "true" ? true : false) {
@@ -19,18 +20,60 @@ const mapProductsHelper = (product, data) => {
             product.discount.discount = 0;
           }
           if (
-            data.offers !== "none" &&
+            data.offerDiscountType !== "none" &&
             data.offers !== undefined &&
             data.offerDiscount !== undefined
           ) {
+            product.discount.offerDiscountType = data.offerDiscountType;
             product.discount.offers = data.offers;
             product.discount.offerDiscount = data.offerDiscount;
           } else {
+            product.offerDiscountType ="none"
             product.discount.offers = "none";
             product.discount.offerDiscount = 0;
+            product.discount.discount = 0;
           }
           break;
         }
+      }
+      case 'status':{
+        if(data['quantity'] && data[key]){
+          if(data['quantity'] === 0 && data[key] === 'avaliable'){
+              product[key] = 'out of stock'
+              break;
+          }
+          else{
+            product[key] = data[key]
+            break;
+          }
+        }
+      }
+      case 'manuDate':{
+        if(data[key]){
+          product[key] = data[key]
+        }
+        break;
+      }
+      case 'expiryDate':{
+        if(data[key]){
+          product[key] = data[key]
+        }
+        break;
+      }
+      case'size':{
+        if(product.size['unitOfMeasurement']){
+          product.size['unitOfMeasurement'] = data[key]['unitOfMeasurement'];
+        }
+        if(product.size['sizeValue']){
+          product.size['sizeValue'] = data[key]['sizeValue'];
+        }
+        break;
+      }
+      case 'color':{
+          //todo
+          if(data[key]){
+            product[key] = data[key]
+          }
       }
       case "ratingMessage":
         break;
@@ -40,20 +83,21 @@ const mapProductsHelper = (product, data) => {
         break;
       case "discountType":
         break;
+      case "offerDiscountType":
+          break;
       case "offers":
         break;
       case "discount":
         break;
-      case "unitOfMeasurement": {
-        product.size[key] = data[key];
-        break;
-      }
-      case "value": {
-        product.size[key] = data[key];
-        break;
-      }
+      case'loveCount':
+          break;
       default:
-        product[key] = data[key];
+        if(['name','price','category','subCategory','weight','quantity','brand','sku','description','image','_id'].includes(key)){
+          if(data[key]){
+            product[key]=data[key]
+          }
+        }
+       break;
     }
   }
   //for rating
@@ -90,15 +134,16 @@ const insert = (data) => {
 };
 
 const find = (condition , options = {}) => {
-  
   let perPage = (parseInt(options.perPage)) || 100;
   let currentPage = (parseInt(options.currentPage) || 1) - 1;
   let skipCount = perPage * currentPage;
 
-  return ProductModel.find(condition)
-  .populate("vendor")
+  return ProductModel
+  .find(condition,{})
+  .sort({_id:-1})
   .limit(perPage)
   .skip(skipCount)
+  .populate("vendor")
   .exec();
 };
 

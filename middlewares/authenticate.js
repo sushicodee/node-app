@@ -13,6 +13,9 @@ module.exports = (req, res, next) => {
   if (req.headers["token"]) {
     token = req.headers["token"];
   }
+  if (req.query["token"]) {
+    token = req.query["token"];
+  }
   if (token) {
     token = token.split(" ")[1];
     JWT.verify(token, config.jwt_secret, (err, verified) => {

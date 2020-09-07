@@ -14,9 +14,7 @@ router
 
 router.route("/:id")
     .get(Authenticate,productController.findById)
-    .put(Authenticate,productController.update)
+    .put(Authenticate,upload.single('image'),productController.update)
     .delete(Authenticate,productController.deleteProduct);
-
-
 
 module.exports = router;

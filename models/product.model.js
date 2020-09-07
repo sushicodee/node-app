@@ -19,7 +19,10 @@ const productSchema = new Schema({
     },
     sku:String,
     description:String,
-    price:Number,
+    price:{
+        type:Number,
+        required:true
+    },
     ratings:[ratings],
     status:{
         type:String,
@@ -31,14 +34,17 @@ const productSchema = new Schema({
         type:String,
         required:true,
     },
-    manuDate:Date,
-    expiryDate:Date,
+    subCategory:{
+        type:String,
+        required:true,
+    },
+    manuDate:Date | null,
+    expiryDate:Date | null,
     quantity:Number,
     size:{
         unitOfMeasurement:String,
-        value:String
+        sizeValue:String
     },
-    image:String,
     weight:Number,
     color:[String],
     discount:{
@@ -56,8 +62,19 @@ const productSchema = new Schema({
             enum:['sale','festival','code','none'],
             default:'none'
         },
+        offerDiscountType:{
+            type:String,
+            enum:['value','percentage','quantity','none'],
+            default:'none',
+        },
         discount:Number,
         offerDiscount:Number,
+    },
+    image:String,
+    images:[String],
+    loveCount:{
+        type:Number,
+        default:0,
     },
 
     vendor:{

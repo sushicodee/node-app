@@ -9,10 +9,10 @@ module.exports = (user, data ,loggedInUser = null) => {
     }
     if (key === "permanent_address" || "temp_address") {
       user.address ={
-        temp_address :data.temp_address.split(",").length > 1
+        temp_address :data.temp_address && data.temp_address.split(",").length > 1
                 ? data.temp_address.split(",")
                 : data.temp_address,
-        permanent_address: data.permanent_address
+        permanent_address: data.permanent_address && data.permanent_address
       }
     }
     if(loggedInUser && updated === 0){

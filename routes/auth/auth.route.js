@@ -31,7 +31,7 @@ router.post("/login", (req, res, next) => {
       username: req.body.username,
     },
     (err, user) => {
-      const invalidMessage = { message: "invalid username or password" }
+      const invalidMessage = { message: "invalid username or password",status:401 }
       if (err) {
         return next(err);
       }
