@@ -2,6 +2,8 @@ const router = require("express").Router();
 const UserModel = require("./../../models/user.model");
 const userMapHelper = require('./../../utils/helpers/userMapHelper');
 const authorize = require("./../../middlewares/authorize");
+const upload = require('./../../middlewares/uploadFileFilter');
+const authenticate = require("../../middlewares/authenticate");
 router
   .route("/")
   .get(authorize,(req, res, next) => {
@@ -45,7 +47,6 @@ router
 
 router
   .route("/:id")
-
   .get((req, res, next) => {
     //find single user
     UserModel.findById(req.params.id,{password:0})
@@ -73,8 +74,34 @@ router
     });
   })
 
-  .put((req, res, next) => {
+  .put(authenticate,upload.single('image'),(req, res, next) => {
     const data = req.body;
+
+    if (req.fileErr) {
+      return next({
+          message: 'Invalid file format using file filter',
+          status: 400
+      })
+  }
+  if (req.file) {
+      const mimeType = req.file.mimetype.split('/')[0];
+      if (mimeType != 'image') {
+          
+          fs.unlink(path.join(process.cwd(), 'files/images/' + req.file.filename), function (err, done) {
+              if (err) {
+                  console.log('err deleteing file');
+              } else {
+                  console.log("file deleted")
+              }
+          })
+          return next({
+              msg: "Invalid file format",
+              status: 400
+          })
+      }
+       
+      data.image = req.file.filename;
+  }
     UserModel.findById(req.params.id, (err, user) => {
       if (err) {
         return next(err);

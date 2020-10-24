@@ -11,6 +11,7 @@ const { PORT } = config;
 const db = require('./db');
 app.use(cors());
 
+require('./socket')(app);
 //load middlewares
 const aunthenticate = require('./middlewares/authenticate');
 

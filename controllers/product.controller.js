@@ -7,7 +7,6 @@ const find = (req,res,next) => {
         condition.vendor = req.loggedInUser._id
     }
     productQuery.find(condition,req.query)
-
     .then(data => {
         res.status(200).send(data)
     })
@@ -93,14 +92,21 @@ const search = (req,res,next) => {
             $gte: newDate(fromDate),
             $lte:newDate(toDate)
         }
-
+    }
+    if(req.body.filters){
+        // let filterArgs = {}
+        for(let key in req.body.filters) {
+            if(req.body.filters[key].length > 0){
+                condition[key] = req.body.filters[key]
+            }
+        }
     }
     productQuery.find(condition,req.query)
     .then(data => {
         res.status(200).send(data)
     })
     .catch(err => {
-        next(err)
+        next({message:err,status:400})
     })
 }
 

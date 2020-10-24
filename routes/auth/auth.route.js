@@ -30,19 +30,21 @@ router.post("/login", (req, res, next) => {
     {
       username: req.body.username,
     },
-    (err, user) => {
+    (err, userData) => {
       const invalidMessage = { message: "invalid username or password",status:401 }
       if (err) {
         return next(err);
       }
-      if (user) {
-        const isMatch = passwordHash.verify(req.body.password,user.password);
+      if (userData) {
+        const isMatch = passwordHash.verify(req.body.password,userData.password);
         if(isMatch){
             const token ='Bearer'+' '+ createToken({
-                name:user.username,
-                role:user.role,
-                _id:user._id
+                name:userData.username,
+                role:userData.role,
+                _id:userData._id
             })
+            const {createdAt,role,status,updatedAt,__v,_id,address,username,image,gender} = userData;
+            const user = {image,username,createdAt,updatedAt,status,role,__v,address,_id,gender}
             res.status(200).send({user,token})
         }else{
              next(invalidMessage);

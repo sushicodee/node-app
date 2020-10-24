@@ -12,6 +12,13 @@ const ratings = new Schema({
     timestamps:true
 })
 
+const love = new Schema({
+    user:{
+        type:Schema.Types.ObjectId,
+        ref:'user'
+    }
+},{timestamps:true})
+
 const productSchema = new Schema({
     name:{
         type:String,
@@ -72,11 +79,7 @@ const productSchema = new Schema({
     },
     image:String,
     images:[String],
-    loveCount:{
-        type:Number,
-        default:0,
-    },
-
+    love:[love],
     vendor:{
         type:Schema.Types.ObjectId,
         ref:'user'

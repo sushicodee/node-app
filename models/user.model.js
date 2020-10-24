@@ -21,6 +21,10 @@ const userSchema = new Schema({
     },
     phone:Number,
     address:{
+        map:{
+            longitude:String,
+            latitude:String
+        },
         temp_address:[String],
         permanent_address:String,
     },
@@ -28,10 +32,10 @@ const userSchema = new Schema({
     image:String,
     gender:{
         type:String,
-        enum:['male','female','others']
+        enum:['male','female','others','']
     },
     role:{
-        //1 admin 2 end-user 3 visitor
+        //1 admin 2 end-user 3 vendor 4 visitor
         type:Number,
         default:2
     },
@@ -40,6 +44,8 @@ const userSchema = new Schema({
         enum:['active','inactive'],
         default:'active',
     },
+    image:String,
+    coverImage:String,
     description:String,
     updatedBy:String,
 },{timestamps:true})

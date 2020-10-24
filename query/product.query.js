@@ -3,7 +3,23 @@ const ProductModel = require("./../models/product.model");
 const mapProductsHelper = (product, data) => {
   for (key in data) {
     switch (key) {
-        
+      case "ratingMessage":
+        break;
+      case "ratingPoint":
+        break;
+      case "offerDiscount":
+        break;
+      case "discountType":
+        break;
+      case "offerDiscountType":
+        break;
+      case "offers":
+        break;
+      case "discount":
+        break;
+      case "loveCount":
+        break;
+
       case "discountedItem": {
         product.discount = {};
         if (data[key] === "true" ? true : false) {
@@ -28,7 +44,7 @@ const mapProductsHelper = (product, data) => {
             product.discount.offers = data.offers;
             product.discount.offerDiscount = data.offerDiscount;
           } else {
-            product.offerDiscountType ="none"
+            product.offerDiscountType = "none";
             product.discount.offers = "none";
             product.discount.offerDiscount = 0;
             product.discount.discount = 0;
@@ -36,94 +52,93 @@ const mapProductsHelper = (product, data) => {
           break;
         }
       }
-      case 'status':{
-        if(data['quantity'] && data[key]){
-          if(data['quantity'] === 0 && data[key] === 'avaliable'){
-              product[key] = 'out of stock'
-              break;
-          }
-          else{
-            product[key] = data[key]
+      case "status": {
+        if (data["quantity"] && data[key]) {
+          if (data["quantity"] === 0 && data[key] === "avaliable") {
+            product[key] = "out of stock";
+            break;
+          } else {
+            product[key] = data[key];
             break;
           }
         }
       }
-      case 'manuDate':{
-        if(data[key]){
-          product[key] = data[key]
+      case "manuDate": {
+        if (data[key]) {
+          product[key] = data[key];
         }
         break;
       }
-      case 'expiryDate':{
-        if(data[key]){
-          product[key] = data[key]
+      case "expiryDate": {
+        if (data[key]) {
+          product[key] = data[key];
         }
         break;
       }
-      case'size':{
-        if(product.size['unitOfMeasurement']){
-          product.size['unitOfMeasurement'] = data[key]['unitOfMeasurement'];
+      case "size": {
+        if (product.size["unitOfMeasurement"]) {
+          product.size["unitOfMeasurement"] = data[key]["unitOfMeasurement"];
         }
-        if(product.size['sizeValue']){
-          product.size['sizeValue'] = data[key]['sizeValue'];
+        if (product.size["sizeValue"]) {
+          product.size["sizeValue"] = data[key]["sizeValue"];
         }
         break;
       }
-      case 'color':{
-          //todo
-          if(data[key]){
-            product[key] = data[key]
-          }
+      case "color": {
+        //todo
+        if (data[key]) {
+          product[key] = data[key];
+        }
       }
-      case "ratingMessage":
-        break;
-      case "ratingPoint":
-        break;
-      case "offerDiscount":
-        break;
-      case "discountType":
-        break;
-      case "offerDiscountType":
-          break;
-      case "offers":
-        break;
-      case "discount":
-        break;
-      case'loveCount':
-          break;
+
       default:
-        if(['name','price','category','subCategory','weight','quantity','brand','sku','description','image','_id'].includes(key)){
-          if(data[key]){
-            product[key]=data[key]
+        if (
+          [
+            "name",
+            "price",
+            "category",
+            "subCategory",
+            "weight",
+            "quantity",
+            "brand",
+            "sku",
+            "description",
+            "image",
+            "_id",
+            "vendor",
+          ].includes(key)
+        ) {
+          if (data[key]) {
+            product[key] = data[key];
           }
         }
-       break;
+        break;
     }
   }
+
   //for rating
-  if(data.productRating || data.ratingPoint){
+  if (data.productRating || data.ratingPoint) {
     product.ratings = product.ratings || [];
-          if (data.ratingPoint && data.ratingMessage) {
-            const rating = {
-              message: data.ratingMessage,
-              value: data.ratingPoint,
-              user: data.user,
-            };
-            product.ratings.unshift(rating);
-          } else if(!data.ratingPoint) {
-            const rating = {
-              message: data.ratingMessage,
-              user: data.user,
-            };
-            product.ratings.unshift(rating);
-          }
-          else{
-            const rating = {
-              value: data.ratingPoint,
-              user: data.user,
-            };
-            product.ratings.unshift(rating);
-          }
+    if (data.ratingPoint && data.ratingMessage) {
+      const rating = {
+        message: data.ratingMessage,
+        value: data.ratingPoint,
+        user: data.user,
+      };
+      product.ratings.unshift(rating);
+    } else if (!data.ratingPoint) {
+      const rating = {
+        message: data.ratingMessage,
+        user: data.user,
+      };
+      product.ratings.unshift(rating);
+    } else {
+      const rating = {
+        value: data.ratingPoint,
+        user: data.user,
+      };
+      product.ratings.unshift(rating);
+    }
   }
 };
 
@@ -133,18 +148,49 @@ const insert = (data) => {
   return newProduct.save();
 };
 
-const find = (condition , options = {}) => {
-  let perPage = (parseInt(options.perPage)) || 100;
+const find = (condition, options = {}) => {
+  return new Promise((resolve, reject) => {
+  let perPage = parseInt(options.perPage) || 100;
   let currentPage = (parseInt(options.currentPage) || 1) - 1;
   let skipCount = perPage * currentPage;
-
-  return ProductModel
-  .find(condition,{})
-  .sort({_id:-1})
-  .limit(perPage)
+  let sortObj = {}
+  let sortVal = 1; 
+  if(options.sort){
+    switch(options.sort){
+      case 'asc':sortVal = 1;
+      break;
+      case'desc':sortVal = -1;
+      break;
+      default:sortVal = -1;
+    }
+    if(!options.sortBy){
+      sortObj['_id'] = sortVal;
+    }else{
+      sortObj[options.sortBy] = sortVal
+    }
+  }
+  ProductModel.find(condition, {})
+  .sort(sortObj)
   .skip(skipCount)
-  .populate("vendor")
-  .exec();
+  .limit(perPage)
+  // .populate("vendor")
+  .exec((err, data) => {
+        if (!err) {
+          ProductModel.countDocuments(condition).exec(
+            (count_error, count) => {
+              if (count_error) {
+                return reject(count_error);
+              }
+              resolve({ data,count });
+            }
+          )
+        }
+      });
+    });
+};
+
+const findAll = (condition, options = {}) => {
+  return ProductModel.find(condition, {}).sort({ _id: -1 }).exec();
 };
 
 const update = (id, data) => {
@@ -157,10 +203,34 @@ const update = (id, data) => {
         return reject({ message: "product not found" });
       }
       mapProductsHelper(product, data);
+      //for like
+      if (data.love) {
+        if (res.loggedInUser.role === 3) {
+          find({ _id: data.user._id }, {}).then((data) => {
+            if (data.love) {
+              if (
+                data.love.forEach((user, index) => {
+                  if (user._id === data.user._id) {
+                    data.love.splice(1, index);
+                    return;
+                  } else {
+                    const love = {
+                      user: data.user,
+                    };
+                    product.love.unshift(love);
+                  }
+                })
+              )
+                product.love = data.love;
+            }
+          });
+        }
+      }
       product.save((err, updated) => {
         if (err) {
           return reject(err);
         }
+        //inform vendor todo
         resolve(updated);
       });
     });
@@ -190,4 +260,5 @@ module.exports = {
   update,
   remove,
   mapProductsHelper,
+  findAll,
 };

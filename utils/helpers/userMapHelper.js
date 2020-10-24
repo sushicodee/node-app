@@ -2,7 +2,7 @@ const passwordHash = require("password-hash");
 module.exports = (user, data ,loggedInUser = null) => {
   let updated = 0;
   for (key in data) {
-    if(key !== "password" || "permanent_address" || "temp_address");
+    if(key !== "password" || "permanent_address" || "temp_address" );
     user[key] = data[key];
     if (key === "password") {
       user.password = passwordHash.generate(data.password);
