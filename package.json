@@ -24,8 +24,8 @@
     "password-hash": "^1.2.2",
     "socket.io": "^2.3.0"
   },
-  "engines":{
-    "node":"v12.13.1",
-    "npm":"6.12.1"
+  "engines": {
+    "node": "v12.13.1",
+    "npm": "6.12.1"
   }
 }
