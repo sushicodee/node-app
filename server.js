@@ -1,14 +1,12 @@
 const express = require('express');
 const app = express();
-const dotenv = require('dotenv');
 const config = require('./configs/index');
 const cors = require('cors');
 const apiRoutes = require('./routes/api.routes');
-
 const path = require('path');
-const { PORT } = config;
 
 const db = require('./db');
+const { PORT } = config;
 app.use(cors());
 
 require('./socket')(app);
@@ -29,10 +27,14 @@ app.use(express.json());
 //path routes
 app.use('/api',apiRoutes)
 
-//setup .env
-dotenv.config({
-    path:'./.env'
-})
+
+
+// if(process.env.NODE_ENV = 'production'){
+//     app.use(express.static('client/build'))
+//     app.get('*', (req,res) => {
+//         res.sendFile(path.resolve(dirname,'client','build','index.html'))
+//     })
+// }
 
 app.use(function(req,res,next){
     next({message:"not found",status:404});

@@ -21,12 +21,11 @@ const userSchema = new Schema({
     },
     phone:Number,
     address:{
-        map:{
-            longitude:String,
-            latitude:String
-        },
         temp_address:[String],
         permanent_address:String,
+    },
+    map:{
+        coordinates:[{lat:Number,lng:Number}]
     },
     dob:Date || null,
     image:String,

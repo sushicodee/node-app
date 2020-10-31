@@ -57,7 +57,7 @@ const insert = (req,res,next) => {
 
 const findById = (req,res,next) => {
     let condition = {_id:req.params.id};
-    productQuery.find(condition)
+    productQuery.findOne(condition)
     .then (data => {
         res.status(200).send(data)
     })
@@ -67,7 +67,7 @@ const findById = (req,res,next) => {
 } 
 
 const search = (req,res,next) => {
-    let condition = {};
+    let condition,query = {};
     productQuery.mapProductsHelper(condition,req.body)
     if(req.body.minPrice){
         condition.price = {
@@ -94,14 +94,20 @@ const search = (req,res,next) => {
         }
     }
     if(req.body.filters){
-        // let filterArgs = {}
         for(let key in req.body.filters) {
             if(req.body.filters[key].length > 0){
-                condition[key] = req.body.filters[key]
+                condition[key] = {
+                    $all:[req.body.filters[key]]
+                }
             }
         }
     }
-    productQuery.find(condition,req.query)
+
+    //build query
+    if(req.body.options){
+        query.options = req.body.options;
+    }
+    productQuery.find(condition,req.query,query)
     .then(data => {
         res.status(200).send(data)
     })

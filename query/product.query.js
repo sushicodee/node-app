@@ -1,3 +1,4 @@
+const productModel = require("./../models/product.model");
 const ProductModel = require("./../models/product.model");
 
 const mapProductsHelper = (product, data) => {
@@ -148,25 +149,25 @@ const insert = (data) => {
   return newProduct.save();
 };
 
-const find = (condition, options = {}) => {
+const find = (condition = {},options = {}, query = {}) => {
   return new Promise((resolve, reject) => {
   let perPage = parseInt(options.perPage) || 100;
   let currentPage = (parseInt(options.currentPage) || 1) - 1;
   let skipCount = perPage * currentPage;
   let sortObj = {}
   let sortVal = 1; 
-  if(options.sort){
-    switch(options.sort){
+  if(query.options.sort){
+    switch(query.options.sort.sort){
       case 'asc':sortVal = 1;
       break;
       case'desc':sortVal = -1;
       break;
-      default:sortVal = -1;
+      default:sortVal = 1;
     }
-    if(!options.sortBy){
+    if(!query.options.sort.sortBy){
       sortObj['_id'] = sortVal;
     }else{
-      sortObj[options.sortBy] = sortVal
+      sortObj[query.options.sort.sortBy] = sortVal
     }
   }
   ProductModel.find(condition, {})
@@ -189,6 +190,10 @@ const find = (condition, options = {}) => {
     });
 };
 
+const findOne = (condition,options = {}) => {
+  return productModel.findOne(condition)
+}
+
 const findAll = (condition, options = {}) => {
   return ProductModel.find(condition, {}).sort({ _id: -1 }).exec();
 };
@@ -205,7 +210,7 @@ const update = (id, data) => {
       mapProductsHelper(product, data);
       //for like
       if (data.love) {
-        if (res.loggedInUser.role === 3) {
+        if (res.loggedInUser.role === 2) {
           find({ _id: data.user._id }, {}).then((data) => {
             if (data.love) {
               if (
@@ -257,6 +262,7 @@ const remove = (id, res, next) => {
 module.exports = {
   insert,
   find,
+  findOne,
   update,
   remove,
   mapProductsHelper,

@@ -15,7 +15,6 @@ module.exports = function (app) {
                if(user.username === data.username){
                 
                }else{
-                   console.log(id,data,'herte')
                    users.push({id,username:data.username})
                }
            })

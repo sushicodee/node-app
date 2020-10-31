@@ -83,6 +83,12 @@ const productSchema = new Schema({
     vendor:{
         type:Schema.Types.ObjectId,
         ref:'user'
+    },
+    views:{
+        count:{
+            type:Number,
+            default:0
+        }
     }
 
     
