@@ -8,7 +8,6 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
 if(process.env.NODE_ENV === "development"){
-  console.log('development')
   connectionUrl = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.fdomo.mongodb.net/${process.env.DB_DATABASE}?retryWrites=true&w=majority`;
 }
 console.log(process.env.NODE_ENV)
