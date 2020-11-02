@@ -10,7 +10,7 @@ const { PORT } = config;
 
 if(process.env.NODE_ENV === 'development'){
     const corsOptions = {
-        origin: 'https://luga-react-app.herokuapp.com/',
+        origin: 'https://luga-react-app.herokuapp.com',
         optionsSuccessStatus: 200
     }
     app.use(cors(corsOptions));
