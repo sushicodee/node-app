@@ -5,7 +5,6 @@ module.exports = function (app) {
   io.on("connect", function (client) {
     const id = client.id;
     client.on("new-message", function (data) {
-        console.log(data)
       client.emit("rply-msg", data);
       client.broadcast.to(data.reciverId).emit("rply-msg-to", data);
     });

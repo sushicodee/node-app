@@ -7,7 +7,17 @@ const path = require('path');
 
 const db = require('./db');
 const { PORT } = config;
-app.use(cors());
+
+if(process.env.NODE_ENV === 'development'){
+    const corsOptions = {
+        origin: 'https://luga-react-app.herokuapp.com/',
+        optionsSuccessStatus: 200
+    }
+    app.use(cors(corsOptions));
+}else{
+    //todo
+    app.use(cors())
+}
 
 require('./socket')(app);
 //load middlewares

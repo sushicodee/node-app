@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "compression": "^1.7.4",
     "concurrently": "^5.3.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
@@ -23,8 +24,8 @@
     "password-hash": "^1.2.2",
     "socket.io": "^2.3.0"
   },
-  "engines":{
-    "node":"v12.13.1",
-    "npm":"6.12.1"
+  "engines": {
+    "node": "v12.13.1",
+    "npm": "6.12.1"
   }
 }
