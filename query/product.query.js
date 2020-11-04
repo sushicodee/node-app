@@ -156,13 +156,13 @@ const find = (condition = {},options = {}, query = {}) => {
   let skipCount = perPage * currentPage;
   let sortObj = {}
   let sortVal = 1; 
-  if(query.options.sort){
+  if(query.options && query.options.sort){
     switch(query.options.sort.sort){
       case 'asc':sortVal = 1;
       break;
       case'desc':sortVal = -1;
       break;
-      default:sortVal = 1;
+      default:break;
     }
     if(!query.options.sort.sortBy){
       sortObj['_id'] = sortVal;
