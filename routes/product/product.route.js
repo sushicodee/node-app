@@ -13,6 +13,14 @@ router
   .get(productController.search);
 
 router
+  .route("/like/:id")
+  .post(Authenticate,productController.like)
+
+  router
+  .route("/unlike/:id")
+  .post(Authenticate,productController.unlike)
+
+router
   .route("/details/:id")
   .get(productController.findById)
 

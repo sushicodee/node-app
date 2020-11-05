@@ -105,6 +105,7 @@ const mapProductsHelper = (product, data) => {
             "sku",
             "description",
             "image",
+            "images",
             "_id",
             "vendor",
           ].includes(key)
@@ -126,19 +127,19 @@ const mapProductsHelper = (product, data) => {
         value: data.ratingPoint,
         user: data.user,
       };
-      product.ratings.unshift(rating);
+      product.ratings.push(rating);
     } else if (!data.ratingPoint) {
       const rating = {
         message: data.ratingMessage,
         user: data.user,
       };
-      product.ratings.unshift(rating);
+      product.ratings.push(rating);
     } else {
       const rating = {
         value: data.ratingPoint,
         user: data.user,
       };
-      product.ratings.unshift(rating);
+      product.ratings.push(rating);
     }
   }
 };
@@ -209,28 +210,6 @@ const update = (id, data) => {
       }
       mapProductsHelper(product, data);
       //for like
-      if (data.love) {
-        if (res.loggedInUser.role === 2) {
-          find({ _id: data.user._id }, {}).then((data) => {
-            if (data.love) {
-              if (
-                data.love.forEach((user, index) => {
-                  if (user._id === data.user._id) {
-                    data.love.splice(1, index);
-                    return;
-                  } else {
-                    const love = {
-                      user: data.user,
-                    };
-                    product.love.unshift(love);
-                  }
-                })
-              )
-                product.love = data.love;
-            }
-          });
-        }
-      }
       product.save((err, updated) => {
         if (err) {
           return reject(err);
@@ -259,6 +238,48 @@ const remove = (id, res, next) => {
   });
 };
 
+const like = (id,res,next) => {
+  productModel.findOneAndUpdate(id,{
+    $push:{love:id}
+},{
+    new:true
+}).exec((err,data) => {
+    if(err){
+        return next(err)
+    }else{
+        res.status(200).send(data)
+    }
+})
+}
+
+const unlike = (id,res,next) => {
+  productModel.findOneAndUpdate(id,{
+    $pull:{love:id}
+},{
+    new:true
+}).exec((err,data) => {
+    if(err){
+        return next(err)
+    }else{
+        res.status(200).send(data)
+    }
+})
+}
+
+const views = (id,res,next) => {
+  productModel.findOneAndUpdate(id,{
+    $push:{views:id}
+},{
+    new:true
+}).exec((err,data) => {
+    if(err){
+        return next(err)
+    }else{
+        res.status(200).send(data)
+    }
+})
+}
+
 module.exports = {
   insert,
   find,
@@ -267,4 +288,7 @@ module.exports = {
   remove,
   mapProductsHelper,
   findAll,
+  like,
+  unlike,
+  views,
 };

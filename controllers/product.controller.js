@@ -1,4 +1,5 @@
 const fs = require('fs');
+// const productModel = require('../models/product.model');
 const productQuery = require("../query/product.query")
 const validateImage = require('./../utils/helpers/imageValidation/imageValidation');
 const find = (req,res,next) => {
@@ -122,7 +123,6 @@ const deleteProduct = (req,res,next) => {
 
 const update = (req,res,next) => {
     const data = req.body;
-   
     if (req.fileErr) {
         return next({
             message: 'Invalid file format using file filter',
@@ -159,4 +159,17 @@ const update = (req,res,next) => {
     })
 }
 
-module.exports = {find,insert,findById,search,deleteProduct,update};
+const like = (req,res,next) => {
+    productQuery.like(req.body._id,res,next);
+}
+
+const unlike = (req,res,next) => {
+    productQuery.unlike(req.body._id,res,next);
+}
+
+const views = (req,res,next) => {
+    productQuery.views(req.body._id,res,next);
+}
+
+
+module.exports = {find,insert,findById,search,deleteProduct,update,like,unlike,views};
