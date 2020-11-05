@@ -1,5 +1,4 @@
 const productModel = require("./../models/product.model");
-const ProductModel = require("./../models/product.model");
 
 const mapProductsHelper = (product, data) => {
   for (key in data) {
@@ -18,9 +17,6 @@ const mapProductsHelper = (product, data) => {
         break;
       case "discount":
         break;
-      case "loveCount":
-        break;
-
       case "discountedItem": {
         product.discount = {};
         if (data[key] === "true" ? true : false) {
@@ -238,46 +234,74 @@ const remove = (id, res, next) => {
   });
 };
 
-const like = (id,res,next) => {
-  productModel.findOneAndUpdate(id,{
-    $push:{love:id}
-},{
-    new:true
-}).exec((err,data) => {
-    if(err){
-        return next(err)
-    }else{
-        res.status(200).send(data)
-    }
-})
+const like = ({productId,userId},res,next) => {
+  return new Promise((resolve, reject) => {
+    ProductModel.findById(productId, (err, product) => {
+      if (err) {
+        return reject(err);
+      }
+      if (!product) {
+        return reject({ message: "product not found" });
+      }
+      if(!product.loves.includes(userId)){
+        product.loves = [...product.loves,userId]
+      }
+      product.save((err, updated) => {
+        if (err) {
+          return reject(err);
+        }
+        //inform vendor todo
+        resolve(updated);
+      });
+    });
+  });
 }
 
-const unlike = (id,res,next) => {
-  productModel.findOneAndUpdate(id,{
-    $pull:{love:id}
-},{
-    new:true
-}).exec((err,data) => {
-    if(err){
-        return next(err)
-    }else{
-        res.status(200).send(data)
-    }
-})
+const unlike = ({productId,userId},res,next) => {
+    return new Promise((resolve, reject) => {
+      ProductModel.findById(productId, (err, product) => {
+        if (err) {
+          return reject(err);
+        }
+        if (!product) {
+          return reject({ message: "product not found" });
+        }
+        let ind = product.loves.indexOf(userId)
+        if(ind !== -1 && product.loves.length>0){
+          product.loves.splice(ind,1);
+        }
+        product.save((err, updated) => {
+          if (err) {
+            return reject(err);
+          }
+          //inform vendor todo
+          resolve(updated);
+        });
+      });
+    });
 }
 
 const views = (id,res,next) => {
-  productModel.findOneAndUpdate(id,{
-    $push:{views:id}
-},{
-    new:true
-}).exec((err,data) => {
-    if(err){
-        return next(err)
-    }else{
-        res.status(200).send(data)
-    }
-})
+  return new Promise((resolve, reject) => {
+    ProductModel.findById(productId, (err, product) => {
+      if (err) {
+        return reject(err);
+      }
+      if (!product) {
+        return reject({ message: "product not found" });
+      }
+      if(!product.views.includes(userId)){
+        product.views.push(userId);
+      }
+      product.save((err, updated) => {
+        if (err) {
+          return reject(err);
+        }
+        //inform vendor todo
+        resolve(updated);
+      });
+    });
+  });
 }
 
 module.exports = {

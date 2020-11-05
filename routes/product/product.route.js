@@ -13,11 +13,11 @@ router
   .get(productController.search);
 
 router
-  .route("/like/:id")
+  .route("/like/:id?")
   .post(Authenticate,productController.like)
 
   router
-  .route("/unlike/:id")
+  .route("/unlike/:id?")
   .post(Authenticate,productController.unlike)
 
 router

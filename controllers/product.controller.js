@@ -160,11 +160,23 @@ const update = (req,res,next) => {
 }
 
 const like = (req,res,next) => {
-    productQuery.like(req.body._id,res,next);
+    productQuery.like({productId:req.body._id || req.params.id,req,userId:req.loggedInUser._id},res,next)
+    .then(data => {
+        res.status(200).send(data)
+    })
+    .catch(err => {
+        next(err)
+    })
 }
 
 const unlike = (req,res,next) => {
-    productQuery.unlike(req.body._id,res,next);
+    productQuery.unlike({productId:req.body._id || req.params.id,userId:req.loggedInUser._id},res,next)
+    .then(data => {
+        res.status(200).send(data)
+    })
+    .catch(err => {
+        next(err)
+    })
 }
 
 const views = (req,res,next) => {
