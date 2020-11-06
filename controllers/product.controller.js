@@ -180,7 +180,13 @@ const unlike = (req,res,next) => {
 }
 
 const views = (req,res,next) => {
-    productQuery.views(req.body._id,res,next);
+    productQuery.views(req.body._id,res,next)
+    .then(data => {
+        res.status(200).send(data)
+    })
+    .catch(err => {
+        next(err)
+    })
 }
 
 
