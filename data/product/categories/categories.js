@@ -33,7 +33,7 @@ const categories = [
         {' Scarves and Shawls':[]},
         {' Gloves':[]},
         {' Innerwear':[]},
-        {' Lingerie':[]},
+        {' Men’s Undergarments':[]},
         {' Socks':[]},
         ],},
       "Shoes",

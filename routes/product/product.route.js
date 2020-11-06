@@ -14,11 +14,11 @@ router
 
 router
   .route("/like/:id?")
-  .post(Authenticate,productController.like)
+  .patch(Authenticate,productController.like)
 
   router
   .route("/unlike/:id?")
-  .post(Authenticate,productController.unlike)
+  .patch(Authenticate,productController.unlike)
 
 router
   .route("/details/:id")

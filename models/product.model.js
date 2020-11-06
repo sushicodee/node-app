@@ -81,9 +81,13 @@ const productSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "user",
     },
-    views:[{ type: Schema.Types.ObjectId, ref: "user" }]
-  },
-  { timestamps: true }
+    // views:{ 
+    //   count:{type:Number,default:0},
+    //   visitors:{type:Number,default:0},
+    //   users:[{type: Schema.Types.ObjectId, ref: "user" }],
+    // },
+    // { timestamps: true },
+  }
 );
 
 module.exports = ProductModel = mongoose.model("product", productSchema);
